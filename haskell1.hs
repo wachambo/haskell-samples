@@ -1,27 +1,16 @@
-raices :: (Float,Float,Float) -> (Float,Float)
-raices (a,b,c)
-    | (d >= 0)  = ( (-b+rd) / da , (-b-rd) / da )
-    | otherwise = error "discriminante negativo"
-        where
-        d  = b*b - 4*a*c
-        rd = sqrt d
-        da = 2*a
-
---ej3
-tresDiferentes :: Int->Int->Int->Bool
-tresDiferentes x y z = (x/=y) && (x/=z) && (y/=z)
+-- Given three Integers, are all of them different?
+allDiff :: Int->Int->Int->Bool
+allDiff x y z = (x/=y) && (x/=z) && (y/=z)
 
 
-
---ej4
+-- Returns the maximun of three Integes.
 max3 :: Int->Int->Int->Int
 max3 x y z = max x (max y z)
 
 
-
---ej5
-cuantosIguales :: Int->Int->Int->Int
-cuantosIguales x y z
+--Given three Integers, how many are the same?
+nequals :: Int->Int->Int->Int
+nequals x y z
     | (x==y) && (x==z) = 3
     | (x==y)           = 2
     | (x==z)           = 2
@@ -29,31 +18,37 @@ cuantosIguales x y z
     | otherwise        = 1
 
 
+-- Given an Integer number, returns the summation from 1 to this number.
+summation :: Int->Int
+summation 1 = 1
+summation n = n + summation(n-1)
 
-
---ej6
-sumatorio :: Int->Int
-sumatorio 1 = 1
-sumatorio n = n + sumatorio(n-1)
-
-
-
-sumatFinal :: Int->Int
-sumatFinal n = gsumatorio n 0
+summation2 :: Int->Int
+-- tail recursive.
+summation2 n = gsummation n 0
     where
-    gsumatorio :: Int->Int->Int
-    gsumatorio 0 x = x
-    gsumatorio n x = gsumatorio (n-1)(x+n)
+    gsummation :: Int->Int->Int
+    gsummation 0 x = x
+    gsummation n x = gsummation (n-1)(x+n)
 
 
+-- Returns the roots of a cuadratic equation.
+roots :: (Float,Float,Float) -> (Float,Float)
+-- Real numbers.
+roots (a,b,c)
+    | (d >= 0)  = ( (-b+rd) / da , (-b-rd) / da )
+    | otherwise = error "COMPLEX ROOTS"
+        where
+        d  = b*b - 4*a*c
+        rd = sqrt d
+        da = 2*a
 
-
---ej7
-type Complejo = (Float,Float)
-raices2 :: Float->Float->Float->[Complejo]
-raices2 0 0 0 = error "no solucion"
-raices2 0 b c = [( -c/b,0 )]
-raices2 a b c
+type Complex = (Float,Float)
+roots2 :: Float->Float->Float->[Complex]
+-- Real and Complex numbers.
+roots2 0 0 0 = error "NO SOLUTION"
+roots2 0 b c = [( -c/b,0 )]
+roots2 a b c
     | (d>0)  = [( (-b+rd/da),0 )  , ( (-b-rd/da),0 )]
     | (d==0) = [( (-b/da),0 )]
     | (d<0)  = [( (-b/da),rd/da ) , ( (-b/da),-rd/da )]
@@ -64,64 +59,48 @@ raices2 a b c
         da = 2*a
 
 
+-- Returns the scalar product of two Integer lists.
+scalarProd :: [Int]->[Int]->Int
+scalarProd [] ys         = 0
+scalarProd xs []         = 0
+scalarProd (x:xs) (y:ys) = (x*y) + scalarProd xs ys
 
 
---ej10
-prodEscalar :: [Int]->[Int]->Int
-prodEscalar [] ys         = 0
-prodEscalar xs []         = 0
-prodEscalar (x:xs) (y:ys) = (x*y) + prodEscalar xs ys
+-- Given a list of lists, returns a list which concatenate all the input lists.
+join :: [[Int]]->[Int]
+join []       = []
+join (xs:xss) = xs ++ join xss
+
+join2 :: [[Int]]->[Int]
+join2 []           = []
+join2 ([]:yss)     = join2 yss
+join2 ((x:xs):yss) = x:join2 (xs:yss)
 
 
+-- Is the list in ascending order?
+asc :: [Int]->Bool
+asc []        = True
+asc (x:[])    = True --also asc [x] = True
+asc (x:y:xss) = (x<=y) && asc xss
 
 
---ej11
-concatena :: [[Int]]->[Int]
-concatena []       = []
-concatena (xs:xss) = xs ++ concatena xss
+-- Given a list of Integers, returns only the odd.
+odds :: [Int]->[Int]
+odds []      = []
+odds (x:xs)
+    | even x    = odds xs
+    | otherwise = x:odds xs
 
 
+-- Sort the Integer list: first the even, then the odd
+sort :: [Int]->[Int]
+sort []           = []
+sort (x:xs)
+    | even x    = x:sort xs
+    | otherwise = sort xs ++ [x]
 
-
-concatena2 :: [[Int]]->[Int]
-concatena2 []           = []
-concatena2 ([]:yss)     = concatena2 yss
-concatena2 ((x:xs):yss) = x:concatena2 (xs:yss)
-
-
-
-
---ej12
-orden :: [Int]->Bool
-orden []        = True
-orden (x:[])    = True --tambien orden [x] = True
-orden (x:y:xss) = (x<=y) && orden xss
-
-
-
-
---ej13
-impares :: [Int]->[Int]
-impares []      = []
-impares (x:xs)
-    | even x    = impares xs
-    | otherwise = x:impares xs
-
-
-
-
---ej14
-pp :: [Int]->[Int]
-pp []           = []
-pp (x:xs)
-    | even x    = x:pp xs
-    | otherwise = pp xs ++ [x]
-
-
-
-
-pp2 :: [Int]->[Int]
-pp2 xs = let (as,bs) = aux xs
+sort2 :: [Int]->[Int]
+sort2 xs = let (as,bs) = aux xs
          in as++bs
     where
     aux []     = ([],[])
@@ -129,10 +108,8 @@ pp2 xs = let (as,bs) = aux xs
                  in if even x then (x:p,i)
                     else           (p,x:i)
 
-
-
-pp3 :: [Int]->[Int]
-pp3 xs = aux2 (aux xs)
+sort3 :: [Int]->[Int]
+sort3 xs = aux2 (aux xs)
     where
     pon x (p,i)
         | even x    = (x:p,i)
@@ -144,9 +121,8 @@ pp3 xs = aux2 (aux xs)
     aux2 :: ([Int],[Int])->[Int]
     aux2 (p,i) = p++i
 
-
-pp4 :: [Int]->[Int]
-pp4 xs = (\(p,i) -> p++i) (aux xs)
+sort4 :: [Int]->[Int]
+sort4 xs = (\(p,i) -> p++i) (aux xs)
     where
     aux[]      = ([],[])
     aux (x:xs) = ( \(p,i) -> if even x then (x:p,i)
