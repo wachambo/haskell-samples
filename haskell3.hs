@@ -36,7 +36,7 @@ pyth :: Int->[(Int,Int,Int)]
 pyth n = [(a,b,c) | a<-[1..n], b<-[1..n], c<-[1..n], a^2+b^2==c^2, a<b]
 
 
--- Polynomial type may be represented as a list of coefficients:
+-- Polynomial data type may be represented as a list of coefficients:
 -- 2 -5x + x^3 -> P[2,-5,0,1]
 data Pol = P [Float]
     deriving Show

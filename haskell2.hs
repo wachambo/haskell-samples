@@ -85,7 +85,7 @@ fib2 n = gfib 0 1 n
 
 -- Remove repeated elements of a list.
 rmRep :: Eq a=>[a]->[a]
-rmRep []     = []
+rmRep []          = []
 rmRep (x:xs)
     | (elem x xs) = rmRep xs
     | otherwise   = x:rmRep xs
